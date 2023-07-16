@@ -1,39 +1,20 @@
-name: WinFinal
-
-on:
+name: macOS
+on: 
   workflow_dispatch:
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
-    runs-on: windows-latest
-
+    runs-on: macos-12
     steps:
-     - uses: actions/checkout@v3
-     - name: Checkout Run
-       env:
-          LINK: ${{ secrets.LINK }}
-       run: |
-         powershell -Command "$env:LINK"
-         
-         
-     - name: Installing Setup
-       env:
-          TOKEN: ${{ secrets.TOKEN }}
-          RUNUSER: ${{ secrets.RUNUSER }}
-          LOCUSER: ${{ secrets.LOCUSER }}
-          PASSWORD: ${{ secrets.PASS }}
-          
-       run: |
-          ngrok authtoken $env:TOKEN
-          powershell -Command "$env:LOCUSER -Name '$env:RUNUSER' -Password (ConvertTo-SecureString -AsPlainText '$env:PASSWORD' -Force)"    
-      
-     - name: Running
-       env:
-          TCPTCP: ${{ secrets.TCPWORD }}
-          PORT: ${{ secrets.SENDPORT }}
-       run: |
-           ngrok $env:TCPTCP $env:PORT
-      
-      
-        
- 
+    - uses: actions/checkout@v3
+    - name: Setting the Environment Up.
+      env:
+        MAC_USER_PASSWORD: ${{ secrets.MAC_USER_PASSWORD }}
+      run: source setup.sh "$MAC_USER_PASSWORD"
+    - name: ngrok is now listening...
+      run: curl --silent http://127.0.0.1:4040/api/tunnels | jq '.tunnels[0].public_url'
+    - name: Setup Session
+      uses: mxschmitt/action-tmate@v3
