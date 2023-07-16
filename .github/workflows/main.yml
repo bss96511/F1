@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     steps:
 
@@ -22,7 +22,7 @@ jobs:
           RUNUSER: ${{ secrets.RUNUSER }}
           LOCUSER: ${{ secrets.LOCUSER }}
           PASSWORD: ${{ secrets.PASS }}
-          AUTH: ${{ secrets.AUTH }}
+          
         run: |
           ngrok authtoken $env:TOKEN
           powershell -Command "$env:LOCUSER -Name '$env:RUNUSER' -Password (ConvertTo-SecureString -AsPlainText '$env:PASSWORD' -Force)"    
