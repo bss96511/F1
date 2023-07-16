@@ -1,4 +1,4 @@
-name: Win_Run_Final
+name: WinFinal
 
 on:
   workflow_dispatch:
@@ -8,30 +8,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-
-      - name: Downloading
-        env:
+     - uses: actions/checkout@v3
+     - name: Checkout Run
+       env:
           LINK: ${{ secrets.LINK }}
-        run: |
+       run: |
          powershell -Command "$env:LINK"
          
          
-      - name: Installing Setup
-        env:
+     - name: Installing Setup
+       env:
           TOKEN: ${{ secrets.TOKEN }}
           RUNUSER: ${{ secrets.RUNUSER }}
           LOCUSER: ${{ secrets.LOCUSER }}
           PASSWORD: ${{ secrets.PASS }}
           
-        run: |
+       run: |
           ngrok authtoken $env:TOKEN
           powershell -Command "$env:LOCUSER -Name '$env:RUNUSER' -Password (ConvertTo-SecureString -AsPlainText '$env:PASSWORD' -Force)"    
       
-      - name: Running
-        env:
+     - name: Running
+       env:
           TCPTCP: ${{ secrets.TCPWORD }}
           PORT: ${{ secrets.SENDPORT }}
-        run: |
+       run: |
            ngrok $env:TCPTCP $env:PORT
       
       
