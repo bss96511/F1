@@ -1,0 +1,39 @@
+name: Win_Run_Final
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+
+      - name: Downloading
+        env:
+          LINK: ${{ secrets.LINK }}
+        run: |
+         powershell -Command "$env:LINK"
+         
+         
+      - name: Installing Setup
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+          RUNUSER: ${{ secrets.RUNUSER }}
+          LOCUSER: ${{ secrets.LOCUSER }}
+          PASSWORD: ${{ secrets.PASS }}
+          AUTH: ${{ secrets.AUTH }}
+        run: |
+          ngrok $env:AUTH $env:TOKEN
+          powershell -Command "$env:LOCUSER -Name '$env:RUNUSER' -Password (ConvertTo-SecureString -AsPlainText '$env:PASSWORD' -Force)"    
+      
+      - name: Running
+        env:
+          TCPTCP: ${{ secrets.TCPWORD }}
+          PORT: ${{ secrets.SENDPORT }}
+        run: |
+           ngrok $env:TCPTCP $env:PORT
+      
+      
+        
+ 
